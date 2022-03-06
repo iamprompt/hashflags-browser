@@ -1,0 +1,6 @@
+{
+  "extends": ["next", "@antfu/eslint-config", "prettier"],
+  "rules": {
+    "no-console": "off"
+  }
+}
