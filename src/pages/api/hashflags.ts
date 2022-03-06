@@ -1,23 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getGuestToken, getHashflags } from '../../utils/twitter'
 
-interface APIResponse<T = any> {
+export interface APIResponse<T = any> {
   success: boolean
   data: T
 }
 
-type HashflagResponse = Record<
-  string,
-  {
-    hashtags: string[]
-    starting_timestamp_ms: number
-    ending_timestamp_ms: number
-    asset_url: string
-  }
->
+export interface Hashflag {
+  hashtags: string[]
+  starting_timestamp_ms: number
+  ending_timestamp_ms: number
+  asset_url: string
+}
+
+export type HashflagResponse = Record<string, Hashflag>
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<APIResponse>
+  res: NextApiResponse<APIResponse<HashflagResponse | unknown>>
 ) {
   try {
     const hashflagsData = await getHashflags(await getGuestToken())
