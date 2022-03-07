@@ -23,7 +23,7 @@ export const HashflagDialog: NextPage<Props> = ({
   const startDate = dayjs(hashflag.starting_timestamp_ms)
   const endDate = dayjs(hashflag.ending_timestamp_ms)
 
-  const displayDateFormat = 'DD MMM YYYY HH:mm:ss A'
+  const displayDateFormat = 'DD MMM YYYY HH:mm'
 
   return (
     <Dialog
