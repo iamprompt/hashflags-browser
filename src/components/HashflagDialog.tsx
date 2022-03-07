@@ -20,6 +20,11 @@ export const HashflagDialog: NextPage<Props> = ({
     return <></>
   }
 
+  const startDate = dayjs(hashflag.starting_timestamp_ms)
+  const endDate = dayjs(hashflag.ending_timestamp_ms)
+
+  const displayDateFormat = 'DD MMM YYYY HH:mm:ss A'
+
   return (
     <Dialog
       open={isOpen}
@@ -36,8 +41,9 @@ export const HashflagDialog: NextPage<Props> = ({
           {hashflag.hashname}
         </Dialog.Title>
         <div className="break-words text-center">
-          {dayjs(hashflag.starting_timestamp_ms).format('DD/MM/YY HH:mm:ss A')}{' '}
-          - {dayjs(hashflag.ending_timestamp_ms).format('DD/MM/YY HH:mm:ss A')}
+          {`${startDate.format(displayDateFormat)} - ${endDate.format(
+            displayDateFormat
+          )} (${endDate.diff(startDate, 'days')} Days)`}
         </div>
         <img
           src={hashflag.asset_url}

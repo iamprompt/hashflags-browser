@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import useSWRImmutable from 'swr/immutable'
 import SearchIcon from '@heroicons/react/outline/SearchIcon'
+import { useRouter } from 'next/router'
 import { fetcher } from '../utils/fetcher'
 import { HashflagDialog } from '../components/HashflagDialog'
 import type {
@@ -13,6 +14,8 @@ import type {
 import { HashflagIcon } from '@/components/HashflagIcon'
 
 const Home: NextPage = () => {
+  const router = useRouter()
+
   const { data, error } = useSWRImmutable<
     APIResponse<HashflagResponse>,
     APIResponse<unknown>
@@ -26,6 +29,13 @@ const Home: NextPage = () => {
   const [queryHashflag, setQueryHashflag] = useState<HashflagWithName[]>([])
 
   useEffect(() => {
+    if (router.query?.q) {
+      if (Array.isArray(router.query.q)) setQuery(router.query.q[0])
+      else setQuery(router.query.q)
+    }
+  }, [router.query])
+
+  useEffect(() => {
     if (data) {
       setAllHashflags(
         Object.entries(data.data).map(([hashname, hashflag]) => ({
@@ -36,20 +46,26 @@ const Home: NextPage = () => {
     }
   }, [data])
 
+  const normalizeString = (str: string) =>
+    str.replace(/[\s_]+/, '').toLowerCase()
+
   useEffect(() => {
     if (query) {
-      setQueryHashflag(
-        AllHashflags.filter((hashflag) =>
-          hashflag.hashname
-            .replace(/[\s_]+/, '')
-            .toLowerCase()
-            .includes(query.replace(/[\s_]+/, '').toLowerCase())
+      try {
+        const regEx = new RegExp(normalizeString(query), 'i')
+        setQueryHashflag(
+          AllHashflags.filter(
+            (hashflag) =>
+              regEx.test(normalizeString(hashflag.hashname)) ||
+              hashflag.hashtags.some((tag) => regEx.test(normalizeString(tag)))
+          )
         )
-      )
+        router.push(`/?q=${encodeURI(query)}`, undefined, { shallow: true })
+      } catch (error) {}
     } else {
       setQueryHashflag(AllHashflags)
     }
-  }, [query, AllHashflags])
+  }, [query, AllHashflags, router])
 
   if (error) return <div>failed to load</div>
 
@@ -59,7 +75,10 @@ const Home: NextPage = () => {
     <>
       <Head>
         <title>Hashflags Browser</title>
-        <meta name="description" content="Find all " />
+        <meta
+          name="description"
+          content="Find all Twitter Hashflags in one place!!"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="mx-auto max-w-screen-xl p-5 pt-10">
@@ -72,6 +91,7 @@ const Home: NextPage = () => {
             <SearchIcon className="absolute inset-0 h-full w-auto p-3" />
             <input
               type="text"
+              value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="h-10 w-full rounded-lg border-transparent pl-9 shadow ring-2 ring-sky-300 focus:border-transparent focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
