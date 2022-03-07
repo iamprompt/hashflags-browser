@@ -64,8 +64,9 @@ const Home: NextPage = () => {
       } catch (error) {}
     } else {
       setQueryHashflag(AllHashflags)
+      router.push(`/`, undefined, { shallow: true })
     }
-  }, [query, AllHashflags, router])
+  }, [query, AllHashflags])
 
   if (error) return <div>failed to load</div>
 
@@ -92,7 +93,9 @@ const Home: NextPage = () => {
             <input
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value)
+              }}
               className="h-10 w-full rounded-lg border-transparent pl-9 shadow ring-2 ring-sky-300 focus:border-transparent focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
           </div>
