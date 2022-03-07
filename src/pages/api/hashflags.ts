@@ -1,19 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getGuestToken, getHashflags } from '../../utils/twitter'
-
-export interface APIResponse<T = any> {
-  success: boolean
-  data: T
-}
-
-export interface Hashflag {
-  hashtags: string[]
-  starting_timestamp_ms: number
-  ending_timestamp_ms: number
-  asset_url: string
-}
-
-export type HashflagResponse = Record<string, Hashflag>
+import { getGuestToken, getHashflags } from '@/utils/twitter'
+import type { APIResponse, HashflagResponse } from '@/types/hashflag'
 
 export default async function handler(
   req: NextApiRequest,

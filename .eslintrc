@@ -2,6 +2,7 @@
   "extends": ["next", "@antfu/eslint-config", "prettier"],
   "rules": {
     "no-console": "off",
-    "@next/next/no-img-element": "off"
+    "@next/next/no-img-element": "off",
+    "react/prop-types": "off"
   }
 }
