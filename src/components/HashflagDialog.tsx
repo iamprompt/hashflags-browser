@@ -36,7 +36,7 @@ export const HashflagDialog: NextPage<Props> = ({
     >
       <Dialog.Overlay className="fixed inset-0 bg-black/75" />
 
-      <div className="relative mx-auto flex h-full w-full flex-col space-y-5 bg-white p-5 sm:h-auto sm:w-2/3 sm:max-w-xl sm:rounded-xl">
+      <div className="relative mx-auto flex min-h-full w-full flex-col space-y-5 bg-white p-5 sm:h-auto sm:w-2/3 sm:max-w-xl sm:rounded-xl">
         <Dialog.Title className="break-words text-center text-xl font-bold">
           {hashflag.hashname}
         </Dialog.Title>
