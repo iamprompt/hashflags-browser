@@ -32,11 +32,11 @@ export const HashflagDialog: NextPage<Props> = ({
         setIsOpen(false)
         setHashflag(null)
       }}
-      className="fixed inset-0 z-50 overflow-y-auto p-4 pt-20 pb-10"
+      className="fixed inset-0 z-50 overflow-y-auto sm:p-4 sm:pb-10 sm:pt-20"
     >
       <Dialog.Overlay className="fixed inset-0 bg-black/75" />
 
-      <div className="relative mx-auto flex w-2/3 max-w-xl flex-col space-y-5 rounded-xl bg-white p-5">
+      <div className="relative mx-auto flex h-full w-full flex-col space-y-5 bg-white p-5 sm:h-auto sm:w-2/3 sm:max-w-xl sm:rounded-xl">
         <Dialog.Title className="break-words text-center text-xl font-bold">
           {hashflag.hashname}
         </Dialog.Title>
@@ -69,6 +69,15 @@ export const HashflagDialog: NextPage<Props> = ({
             </a>
           ))}
         </div>
+        <button
+          className="w-full rounded-lg bg-sky-400 py-3 font-bold text-white sm:hidden"
+          onClick={() => {
+            setIsOpen(false)
+            setHashflag(null)
+          }}
+        >
+          Close
+        </button>
       </div>
     </Dialog>
   )
