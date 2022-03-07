@@ -1,9 +1,9 @@
 import type { NextPage } from 'next'
-import type { HashflagWithName } from '@/types/hashflag'
+import type { Hashflag } from '@/types/hashflag'
 
 interface Props {
-  hashflag: HashflagWithName
-  onClick: (value: HashflagWithName) => void
+  hashflag: Hashflag
+  onClick: (value: Hashflag) => void
 }
 
 export const HashflagIcon: NextPage<Props> = ({ hashflag, onClick }) => {
@@ -13,8 +13,8 @@ export const HashflagIcon: NextPage<Props> = ({ hashflag, onClick }) => {
       onClick={() => onClick(hashflag)}
     >
       <img
-        src={hashflag.asset_url}
-        alt={hashflag.hashname}
+        src={hashflag.assetUrl}
+        alt={hashflag.campaignName}
         className="h-14 w-14"
       />
     </div>

@@ -3,15 +3,19 @@ export interface APIResponse<T = any> {
   data: T
 }
 
-export interface Hashflag {
-  hashtags: string[]
+export interface TWAPIHashflag {
+  hashtag: string
   starting_timestamp_ms: number
   ending_timestamp_ms: number
   asset_url: string
 }
 
-export interface HashflagWithName extends Hashflag {
-  hashname: string
+export interface Hashflag {
+  campaignName: string
+  hashtags: string[]
+  assetUrl: string
+  starting: number
+  ending: number
 }
 
-export type HashflagResponse = Record<string, Hashflag>
+export type HashflagAPIResponse = Record<string, Hashflag>

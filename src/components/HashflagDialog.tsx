@@ -1,13 +1,13 @@
 import { Dialog } from '@headlessui/react'
 import dayjs from 'dayjs'
 import type { NextPage } from 'next'
-import type { HashflagWithName } from '@/types/hashflag'
+import type { Hashflag } from '@/types/hashflag'
 
 interface Props {
   isOpen: boolean
   setIsOpen: (value: boolean) => void
-  setHashflag: (value: HashflagWithName | null) => void
-  hashflag: HashflagWithName | null
+  setHashflag: (value: Hashflag | null) => void
+  hashflag: Hashflag | null
 }
 
 export const HashflagDialog: NextPage<Props> = ({
@@ -20,8 +20,8 @@ export const HashflagDialog: NextPage<Props> = ({
     return <></>
   }
 
-  const startDate = dayjs(hashflag.starting_timestamp_ms)
-  const endDate = dayjs(hashflag.ending_timestamp_ms)
+  const startDate = dayjs(hashflag.starting)
+  const endDate = dayjs(hashflag.ending)
 
   const displayDateFormat = 'DD MMM YYYY HH:mm'
 
@@ -38,7 +38,7 @@ export const HashflagDialog: NextPage<Props> = ({
 
       <div className="relative mx-auto flex min-h-full w-full flex-col space-y-5 bg-white p-5 sm:h-auto sm:min-h-min sm:w-2/3 sm:max-w-xl sm:rounded-xl">
         <Dialog.Title className="break-words text-center text-xl font-bold">
-          {hashflag.hashname}
+          {hashflag.campaignName}
         </Dialog.Title>
         <div className="break-words text-center">
           {`${startDate.format(displayDateFormat)} - ${endDate.format(
@@ -46,24 +46,24 @@ export const HashflagDialog: NextPage<Props> = ({
           )} (${endDate.diff(startDate, 'days')} Days)`}
         </div>
         <img
-          src={hashflag.asset_url}
-          alt={hashflag.hashname}
+          src={hashflag.assetUrl}
+          alt={hashflag.campaignName}
           className="mx-auto h-[72px] w-[72px]"
         />
 
-        <div className="flex flex-wrap justify-center gap-2 text-center">
+        <div className="flex flex-wrap items-center justify-center gap-2 text-center">
           {hashflag.hashtags.map((tag) => (
             <a
-              className="break-words text-sky-500 outline-none hover:text-sky-300 hover:underline"
+              className="flex items-center gap-1 break-words text-sky-500 outline-none hover:text-sky-300 hover:underline"
               key={tag}
               href={`https://twitter.com/hashtag/${tag}`}
               target="_blank"
               rel="noreferrer"
             >
-              {`#${tag}`}{' '}
+              {`#${tag}`}
               <img
-                src={hashflag.asset_url}
-                alt={hashflag.hashname}
+                src={hashflag.assetUrl}
+                alt={hashflag.campaignName}
                 className="inline h-4 w-4"
               />
             </a>

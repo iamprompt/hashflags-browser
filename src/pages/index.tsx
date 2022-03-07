@@ -6,8 +6,8 @@ import { fetcher } from '../utils/fetcher'
 import { HashflagDialog } from '../components/HashflagDialog'
 import type {
   APIResponse,
-  HashflagResponse,
-  HashflagWithName,
+  Hashflag,
+  HashflagAPIResponse,
 } from '@/types/hashflag'
 import { HashflagIcon } from '@/components/HashflagIcon'
 import { SearchBar } from '@/components/SearchBar'
@@ -17,16 +17,17 @@ const Home: NextPage = () => {
   const router = useRouter()
 
   const { data, error } = useSWRImmutable<
-    APIResponse<HashflagResponse>,
+    APIResponse<HashflagAPIResponse>,
     APIResponse<unknown>
   >('/api/hashflags', fetcher)
 
-  const [AllHashflags, setAllHashflags] = useState<HashflagWithName[]>([])
-  const [selectedHashflag, setSelectedHashflag] =
-    useState<HashflagWithName | null>(null)
+  const [hashflagCollection, setHashflagCollection] = useState<Hashflag[]>([])
+  const [selectedHashflag, setSelectedHashflag] = useState<Hashflag | null>(
+    null
+  )
   const [isHashflagModalOpen, setHashflagModalOpen] = useState<boolean>(false)
   const [query, setQuery] = useState('')
-  const [queryHashflag, setQueryHashflag] = useState<HashflagWithName[]>([])
+  const [queryHashflag, setQueryHashflag] = useState<Hashflag[]>([])
 
   useEffect(() => {
     if (router.query?.q) {
@@ -37,12 +38,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (data) {
-      setAllHashflags(
-        Object.entries(data.data).map(([hashname, hashflag]) => ({
-          hashname,
-          ...hashflag,
-        }))
-      )
+      setHashflagCollection(Object.values(data.data))
     }
   }, [data])
 
@@ -54,19 +50,19 @@ const Home: NextPage = () => {
       try {
         const regEx = new RegExp(normalizeString(query), 'i')
         setQueryHashflag(
-          AllHashflags.filter(
+          hashflagCollection.filter(
             (hashflag) =>
-              regEx.test(normalizeString(hashflag.hashname)) ||
+              regEx.test(normalizeString(hashflag.campaignName)) ||
               hashflag.hashtags.some((tag) => regEx.test(normalizeString(tag)))
           )
         )
         router.push(`/?q=${encodeURI(query)}`, undefined, { shallow: true })
       } catch (error) {}
     } else {
-      setQueryHashflag(AllHashflags)
+      setQueryHashflag(hashflagCollection)
       router.push(`/`, undefined, { shallow: true })
     }
-  }, [query, AllHashflags])
+  }, [query, hashflagCollection])
 
   return (
     <>
@@ -88,15 +84,13 @@ const Home: NextPage = () => {
         ) : (
           <>
             <SearchBar className="mb-10" query={query} setQuery={setQuery} />
-            <div className="flex flex-wrap justify-center">
+            <div className="mx-auto flex max-w-screen-lg flex-wrap justify-between">
               {queryHashflag
-                .sort(
-                  (a, b) => b.starting_timestamp_ms - a.starting_timestamp_ms
-                )
+                .sort((a, b) => b.starting - a.starting)
                 .map((hashFields) => {
                   return (
                     <HashflagIcon
-                      key={hashFields.hashname}
+                      key={hashFields.campaignName}
                       hashflag={hashFields}
                       onClick={(v) => {
                         setSelectedHashflag(v)

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import type { TWAPIHashflag } from '@/types/hashflag'
 
 const GUEST_AUTH_TOKEN =
   'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA'
@@ -27,15 +28,8 @@ export const getGuestToken = () =>
       .catch(reject)
   })
 
-interface Hashflag {
-  hashtag: string
-  starting_timestamp_ms: number
-  ending_timestamp_ms: number
-  asset_url: string
-}
-
 export const getHashflags = (guestToken: string) => {
-  return new Promise<Hashflag[]>((resolve, reject) => {
+  return new Promise<TWAPIHashflag[]>((resolve, reject) => {
     axios
       .get<[]>(HASHFLAGS_ENDPOINT, {
         headers: {
