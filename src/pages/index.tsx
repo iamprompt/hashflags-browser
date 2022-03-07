@@ -1,8 +1,6 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import useSWRImmutable from 'swr/immutable'
-import SearchIcon from '@heroicons/react/outline/SearchIcon'
 import { useRouter } from 'next/router'
 import { fetcher } from '../utils/fetcher'
 import { HashflagDialog } from '../components/HashflagDialog'
@@ -12,6 +10,8 @@ import type {
   HashflagWithName,
 } from '@/types/hashflag'
 import { HashflagIcon } from '@/components/HashflagIcon'
+import { SearchBar } from '@/components/SearchBar'
+import { SEO } from '@/components/SEO'
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -68,54 +68,46 @@ const Home: NextPage = () => {
     }
   }, [query, AllHashflags])
 
-  if (error) return <div>failed to load</div>
-
-  if (!data) return <div>Loading...</div>
-
   return (
     <>
-      <Head>
-        <title>Hashflags Browser</title>
-        <meta
-          name="description"
-          content="Find all Twitter Hashflags in one place!!"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <SEO />
       <main className="mx-auto max-w-screen-xl p-5 pt-10">
         <h1 className="mb-8 text-center text-4xl font-bold">
           Hashflags Browser
         </h1>
-        {/* Search Bar */}
-        <div className="mb-10 flex flex-row justify-center gap-3">
-          <div className="relative w-full max-w-screen-sm">
-            <SearchIcon className="absolute inset-0 h-full w-auto p-3" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value)
-              }}
-              className="h-10 w-full rounded-lg border-transparent pl-9 shadow ring-2 ring-sky-300 focus:border-transparent focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap justify-center">
-          {queryHashflag
-            .sort((a, b) => b.starting_timestamp_ms - a.starting_timestamp_ms)
-            .map((hashFields) => {
-              return (
-                <HashflagIcon
-                  key={hashFields.hashname}
-                  hashflag={hashFields}
-                  onClick={(v) => {
-                    setSelectedHashflag(v)
-                    setHashflagModalOpen(true)
-                  }}
-                />
-              )
-            })}
-        </div>
+        {error ? (
+          <>
+            <div className="text-center text-xl font-bold text-red-700">
+              Failed to load the hashflags data
+            </div>
+          </>
+        ) : !data ? (
+          <>
+            <div className="text-center text-xl font-bold">Loading...</div>
+          </>
+        ) : (
+          <>
+            <SearchBar className="mb-10" query={query} setQuery={setQuery} />
+            <div className="flex flex-wrap justify-center">
+              {queryHashflag
+                .sort(
+                  (a, b) => b.starting_timestamp_ms - a.starting_timestamp_ms
+                )
+                .map((hashFields) => {
+                  return (
+                    <HashflagIcon
+                      key={hashFields.hashname}
+                      hashflag={hashFields}
+                      onClick={(v) => {
+                        setSelectedHashflag(v)
+                        setHashflagModalOpen(true)
+                      }}
+                    />
+                  )
+                })}
+            </div>
+          </>
+        )}
       </main>
 
       <HashflagDialog
