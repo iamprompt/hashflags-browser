@@ -86,7 +86,11 @@ const Home: NextPage = () => {
             <SearchBar className="mb-10" query={query} setQuery={setQuery} />
             <div className="mx-auto flex max-w-screen-lg flex-wrap justify-between">
               {queryHashflag
-                .sort((a, b) => b.starting - a.starting)
+                .sort((a, b) =>
+                  a.starting !== b.starting
+                    ? b.starting - a.starting
+                    : a.campaignName.localeCompare(b.campaignName)
+                )
                 .map((hashFields) => {
                   return (
                     <HashflagIcon
