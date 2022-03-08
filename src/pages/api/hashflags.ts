@@ -15,7 +15,7 @@ export default async function handler(
   try {
     const hashflagsData = await getHashflags(await getGuestToken())
     if (req.query.raw) {
-      res.status(200).json({ success: true, data: hashflagsData })
+      return res.status(200).json({ success: true, data: hashflagsData })
     }
 
     const hashFormatted = hashflagsData.reduce((acc, curr) => {
@@ -40,8 +40,8 @@ export default async function handler(
       return acc
     }, {} as HashflagAPIResponse)
 
-    res.status(200).json({ success: true, data: hashFormatted })
+    return res.status(200).json({ success: true, data: hashFormatted })
   } catch (error) {
-    res.status(400).json({ success: false, data: error })
+    return res.status(400).json({ success: false, data: error })
   }
 }
