@@ -1,13 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getGuestToken, getHashflags } from '@/utils/twitter'
-import type { APIResponse, HashflagAPIResponse } from '@/types/hashflag'
+import type {
+  APIResponse,
+  HashflagAPIResponse,
+  TWAPIHashflag,
+} from '@/types/hashflag'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<APIResponse<HashflagAPIResponse | unknown>>
+  res: NextApiResponse<
+    APIResponse<HashflagAPIResponse | unknown | TWAPIHashflag[]>
+  >
 ) {
   try {
     const hashflagsData = await getHashflags(await getGuestToken())
+    if (req.query.raw) {
+      res.status(200).json({ success: true, data: hashflagsData })
+    }
+
     const hashFormatted = hashflagsData.reduce((acc, curr) => {
       const hashUrlSplit = curr.asset_url.split('/')
       hashUrlSplit.pop()
